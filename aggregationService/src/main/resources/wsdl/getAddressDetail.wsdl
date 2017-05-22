@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="getAddressDetail" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="getAddressDetail"
+	targetNamespace="getAddressDetail">
+	<wsdl:types>
+		<xsd:schema targetNamespace="getAddressDetail">
+			<xsd:element name="getAddressDetailRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="empId" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getAddressDetailResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						
+						<xsd:element name="empId" type="xsd:string" />						
+						<xsd:element name="emailAddress" type="xsd:string" />
+						<xsd:element name="contactNumber" type="xsd:string" />
+						<xsd:element name="address" type="xsd:string" />
+
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="getAddressDetailRequest">
+		<wsdl:part element="tns:getAddressDetailRequest" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="getAddressDetailResponse">
+		<wsdl:part element="tns:getAddressDetailResponse" name="parameters" />
+	</wsdl:message>
+	<wsdl:portType name="getAddressDetail">
+		<wsdl:operation name="getAddressDetail">
+			<wsdl:input message="tns:getAddressDetailRequest" name="getAddressDetailRequest"/>
+			<wsdl:output message="tns:getAddressDetailResponse" name="getAddressDetailResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="getAddressDetailSOAP" type="tns:getAddressDetail">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="getAddressDetail">
+			<soap:operation soapAction="getAddressDetail/getAddressDetail" />
+			<wsdl:input name="getAddressDetailRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getAddressDetailResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="getAddressDetailService">
+		<wsdl:port binding="tns:getAddressDetailSOAP" name="getAddressDetailSOAP">
+			<soap:address location="http://localhost:8092/getAddressDetailService" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

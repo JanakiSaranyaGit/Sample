@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:camel="http://camel.apache.org/schema/spring" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="          http://www.springframework.org/schema/beans           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd          http://camel.apache.org/schema/spring           http://camel.apache.org/schema/spring/camel-spring.xsd">
+	<import resource="classpath:META-INF/spring/endpoints.xml" />
+	<bean
+		class="com.sample.uk.integration.domain.api.datamapper.GetAddressDetailServiceDataMapper"
+		id="addressDetailServicemapper" />
+	<bean
+		class="com.sample.uk.integration.domain.api.datamapper.GetEmployeeDetailServiceDataMapper"
+		id="employeeDetailServicemapper" />
+	<bean
+		class="com.sample.uk.integration.domain.api.datamapper.GetPersonDetailServiceDataMapper"
+		id="personDetailServicemapper" />
+	<bean
+		class="com.sample.uk.integration.domain.api.datamapper.GetTeamMemberServiceDataMapper"
+		id="teamMemberDetailServicemapper" />
+	<bean
+		class="com.sample.uk.integration.domain.api.validator.GetAddressDetailServiceDataValidator"
+		id="addressDetailServiceValidator" />
+	<bean
+		class="com.sample.uk.integration.domain.api.validator.GetEmployeeDetailServiceDataValidator"
+		id="employeeDetailServiceValidator" />
+	<bean
+		class="com.sample.uk.integration.domain.api.validator.GetPersonDetailServiceDataDataValidator"
+		id="personDetailServiceValidator" />
+	<bean
+		class="com.sample.uk.integration.domain.api.validator.GetTeamMemberDetailServiceDataValidator"
+		id="teamMemberDetailDetailServiceValidator" />
+	<bean
+		class="com.sample.uk.integration.domain.api.errorHandler.ProblemDetailException"
+		id="problemDetailException" />
+	<bean
+		class="com.sample.uk.integration.domain.api.aggregationStrategy.AggregationStrategyGenerator"
+		id="aggregateStrategy" />
+	<bean
+		class="com.sample.uk.integration.domain.api.recepientListStrategy.ReceipientListGenerator"
+		id="receipientListStrategy" />
+	<camelContext id="camelContextAggregation" xmlns="http://camel.apache.org/schema/spring">
+		<route id="_route1">
+			<from id="_from1"
+				uri="cxf:bean:getTeamMemberDetailsEndpoint?synchronous=true" />
+			<bean id="_bean1" method="frameInput" ref="teamMemberDetailServicemapper" />
+			<bean id="_bean2" method="validateData"
+				ref="teamMemberDetailDetailServiceValidator" />
+			<bean id="_bean13" method="generateReceipientList" ref="receipientListStrategy" />
+			<recipientList id="_recipientList1" parallelProcessing="true"
+				stopOnException="true" strategyRef="aggregateStrategy">
+				<header>recipients</header>
+			</recipientList>
+			<bean id="_bean3" method="frameOutput" ref="teamMemberDetailServicemapper" />
+		</route>
+		<!-- test route -->
+		<route id="_route2">
+
+			<from id="_from2" uri="direct-vm:employeeDetail?synchronous=true" />
+			<bean id="_bean4" method="frameInput" ref="employeeDetailServicemapper" />
+			<to id="_to1" uri="cxf:bean:getEmployeeDetailEndpoint?synchronous=true" />
+			<bean id="_bean6" method="frameOutput" ref="employeeDetailServicemapper" />
+			<bean id="_bean5" method="validateData" ref="employeeDetailServiceValidator" />
+		</route>
+		<route id="_route3">
+			<from id="_from3" uri="direct-vm:personDetail?synchronous=true" />			
+			<bean id="_bean7" method="frameInput" ref="personDetailServicemapper" />
+			<to id="_to2" uri="cxf://bean://getPersonDetailEndpoint?synchronous=true" />
+			<bean id="_bean9" method="frameOutput" ref="personDetailServicemapper" />
+			<bean id="_bean8" method="validateData" ref="personDetailServiceValidator" />
+		</route>
+		<route id="_route4">
+			
+			<from id="_from4" uri="direct-vm:addressDetail?synchronous=true" />
+			<bean id="_bean10" method="frameInput" ref="addressDetailServicemapper" />
+			<to id="_to3" uri="cxf://bean://getAddressDetailEndpoint?synchronous=true"/>
+			<bean id="_bean12" method="frameOutput" ref="addressDetailServicemapper" />
+			<bean id="_bean11" method="validateData" ref="addressDetailServiceValidator" />
+		</route>
+	</camelContext>
+</beans>

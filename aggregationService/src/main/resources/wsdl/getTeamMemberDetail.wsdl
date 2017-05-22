@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="getTeamMemberDetail" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="getTeamMemberDetail"
+	targetNamespace="getTeamMemberDetail">
+	<wsdl:types>
+		<xsd:schema targetNamespace="getTeamMemberDetail">
+			<xsd:element name="getTeamMemberDetailRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="empId" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getTeamMemberDetailResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="empName" type="xsd:string" />
+						<xsd:element name="empId" type="xsd:string" />
+						<xsd:element name="department" type="xsd:string" />
+						<xsd:element name="dob" type="xsd:string" />
+						<xsd:element name="nino" type="xsd:string" />
+						<xsd:element name="surname" type="xsd:string" />
+						<xsd:element name="emailAddress" type="xsd:string" />
+						<xsd:element name="contactNumber" type="xsd:string" />
+						<xsd:element name="address" type="xsd:string" />
+
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="getTeamMemberDetailRequest">
+		<wsdl:part element="tns:getTeamMemberDetailRequest" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="getTeamMemberDetailResponse">
+		<wsdl:part element="tns:getTeamMemberDetailResponse" name="parameters" />
+	</wsdl:message>
+	<wsdl:portType name="getTeamMemberDetail">
+		<wsdl:operation name="getTeamMemberDetail">
+			<wsdl:input message="tns:getTeamMemberDetailRequest" name="getTeamMemberDetailRequest"/>
+			<wsdl:output message="tns:getTeamMemberDetailResponse" name="getTeamMemberDetailResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="getTeamMemberDetailSOAP" type="tns:getTeamMemberDetail">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="getTeamMemberDetail">
+			<soap:operation soapAction="getTeamMemberDetail/getTeamMemberDetail" />
+			<wsdl:input name="getTeamMemberDetailRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getTeamMemberDetailResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="getTeamMemberDetailService">
+		<wsdl:port binding="tns:getTeamMemberDetailSOAP" name="getTeamMemberDetailSOAP">
+			<soap:address location="http://localhost:8089/getTeamMemberDetailService" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
